@@ -1,3 +1,3 @@
-# conan-libxml2
+# conan-winiconv
 
-Conan package for libiconv library
+Conan package for winiconv library
