@@ -15,6 +15,9 @@ class WiniconvConan(ConanFile):
     license = "win_iconv is placed in the public domain."
     description = "iconv implementation using Win32 API to convert."
 
+    def configure(self):
+        del self.settings.compiler.libcxx
+
     def source(self):
         winiconv_name = "winiconv-%s.tar.gz" % self.version
         tools.download("https://github.com/win-iconv/win-iconv/archive/v{0}.tar.gz".format(self.version), winiconv_name)
