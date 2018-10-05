@@ -1,18 +1,17 @@
 variables:
   CONAN_REFERENCE: "winiconv/0.0.8"
-  CONAN_USERNAME: "fw4spl"
-  CONAN_LOGIN_USERNAME: "fw4spl"
+  CONAN_USERNAME: "sigth"
+  CONAN_LOGIN_USERNAME: "sight"
   CONAN_CHANNEL: "stable"
-  CONAN_UPLOAD: "http://5.39.78.163:8081/artifactory/api/conan/conan-local"
   CONAN_STABLE_BRANCH_PATTERN: "stable/*"
-  CONAN_UPLOAD_ONLY_WHEN_STABLE: 1 # Will only upload when the branch matches "stable/*"
-  CONAN_DOCKER_32_IMAGES: 1
+  CONAN_UPLOAD_ONLY_WHEN_STABLE: 1
+  CONAN_ARCHS: x86_64
 
 stages:
   - build
 
 msvc2015:
-  image: greenjava/vcbuild2015:1.0
+  image: registry.lan.local:5000/docker-envdev-msvc2015:dev
   stage: build
   script:
     - python build.py
@@ -21,7 +20,7 @@ msvc2015:
     - windows
 
 msvc2017:
-  image: greenjava/vcbuild2017:1.0
+  image: registry.lan.local:5000/docker-envdev-msvc2017:dev
   stage: build
   script:
     - python build.py
