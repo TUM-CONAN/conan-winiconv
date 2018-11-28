@@ -11,7 +11,7 @@ class WiniconvConan(ConanFile):
     settings =  "os", "compiler", "arch", "build_type"
     options = {"shared": [True, False]}
     default_options = "shared=True"
-    url = "https://gitlab.lan.local/conan/conan-winiconv"
+    url = "https://git.ircad.fr/conan/conan-winiconv"
     license = "win_iconv is placed in the public domain."
     description = "iconv implementation using Win32 API to convert."
 
