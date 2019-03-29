@@ -6,7 +6,10 @@ from conans import ConanFile, tools, CMake
 
 class WiniconvConan(ConanFile):
     name = "winiconv"
-    version = "0.0.8"
+    upstream_version = "0.0.8"
+    package_revision = "-r1"
+    version = "{0}{1}".format(upstream_version, package_revision)
+
     generators = "cmake"
     settings =  "os", "compiler", "arch", "build_type"
     options = {"shared": [True, False]}
@@ -19,13 +22,13 @@ class WiniconvConan(ConanFile):
         del self.settings.compiler.libcxx
 
     def source(self):
-        winiconv_name = "winiconv-%s.tar.gz" % self.version
-        tools.download("https://github.com/win-iconv/win-iconv/archive/v{0}.tar.gz".format(self.version), winiconv_name)
+        winiconv_name = "winiconv-%s.tar.gz" % self.upstream_version
+        tools.download("https://github.com/win-iconv/win-iconv/archive/v{0}.tar.gz".format(self.upstream_version), winiconv_name)
         tools.unzip(winiconv_name)
         os.unlink(winiconv_name)
 
     def build(self):
-        iconv_source_dir = os.path.join(self.source_folder, "win-iconv-{0}".format(self.version))
+        iconv_source_dir = os.path.join(self.source_folder, "win-iconv-{0}".format(self.upstream_version))
         cmake = CMake(self)
         cmake.configure(source_folder=iconv_source_dir)
         cmake.build()
