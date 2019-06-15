@@ -32,7 +32,7 @@ class WiniconvConan(ConanFile):
 
     def source(self):
         tools.get("https://github.com/win-iconv/win-iconv/archive/v{0}.tar.gz".format(self.upstream_version))
-        os.rename("winiconv-" + self.upstream_version, self.source_subfolder)
+        os.rename("win-iconv-" + self.upstream_version, self.source_subfolder)
     
 
     def build(self):
