@@ -2,12 +2,13 @@
 # -*- coding: utf-8 -*-
 
 import os
+import shutil
 from conans import ConanFile, tools, CMake
 
 class WiniconvConan(ConanFile):
     name = "winiconv"
     upstream_version = "0.0.8"
-    package_revision = "-r1"
+    package_revision = "-r2"
     version = "{0}{1}".format(upstream_version, package_revision)
 
     generators = "cmake"
@@ -17,20 +18,37 @@ class WiniconvConan(ConanFile):
     url = "https://git.ircad.fr/conan/conan-winiconv"
     license = "win_iconv is placed in the public domain."
     description = "iconv implementation using Win32 API to convert."
+    exports = [
+        "patches/CMakeProjectWrapper.txt"
+    ]
+    source_subfolder = "source_subfolder"
+    build_subfolder = "build_subfolder"
+    short_paths = True
 
     def configure(self):
         del self.settings.compiler.libcxx
 
+    def requirements(self):
+        self.requires("common/1.0.0@sight/stable")
+
     def source(self):
-        winiconv_name = "winiconv-%s.tar.gz" % self.upstream_version
-        tools.download("https://github.com/win-iconv/win-iconv/archive/v{0}.tar.gz".format(self.upstream_version), winiconv_name)
-        tools.unzip(winiconv_name)
-        os.unlink(winiconv_name)
+        tools.get("https://github.com/win-iconv/win-iconv/archive/v{0}.tar.gz".format(self.upstream_version))
+        os.rename("win-iconv-" + self.upstream_version, self.source_subfolder)
+    
 
     def build(self):
-        iconv_source_dir = os.path.join(self.source_folder, "win-iconv-{0}".format(self.upstream_version))
+        # Import common flags and defines
+        import common
+
+        shutil.move("patches/CMakeProjectWrapper.txt", "CMakeLists.txt")
+
         cmake = CMake(self)
-        cmake.configure(source_folder=iconv_source_dir)
+        
+        # Set common flags
+        cmake.definitions["SIGHT_CMAKE_C_FLAGS"] = common.get_c_flags()
+        cmake.definitions["SIGHT_CMAKE_CXX_FLAGS"] = common.get_cxx_flags()
+        
+        cmake.configure(build_folder=self.build_subfolder)
         cmake.build()
         cmake.install()
 
