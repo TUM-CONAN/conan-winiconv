@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import os
-import shutil
+
 from conans import ConanFile, tools, CMake
 
 
@@ -19,11 +19,7 @@ class WiniconvConan(ConanFile):
     url = "https://git.ircad.fr/conan/conan-winiconv"
     license = "win_iconv is placed in the public domain."
     description = "iconv implementation using Win32 API to convert."
-    exports = [
-        "patches/CMakeProjectWrapper.txt"
-    ]
     source_subfolder = "source_subfolder"
-    build_subfolder = "build_subfolder"
     short_paths = True
 
     def configure(self):
@@ -40,17 +36,17 @@ class WiniconvConan(ConanFile):
         # Import common flags and defines
         import common
 
-        shutil.move("patches/CMakeProjectWrapper.txt", "CMakeLists.txt")
+        # Generate Cmake wrapper
+        common.generate_cmake_wrapper(
+            cmakelists_path='CMakeLists.txt',
+            source_subfolder=self.source_subfolder,
+            build_type=self.settings.build_type
+        )
 
         cmake = CMake(self)
+        cmake.verbose = True
 
-        # Export common flags
-        cmake.definitions["SIGHT_CMAKE_CXX_FLAGS"] = common.get_cxx_flags()
-        cmake.definitions["SIGHT_CMAKE_CXX_FLAGS_RELEASE"] = common.get_cxx_flags_release()
-        cmake.definitions["SIGHT_CMAKE_CXX_FLAGS_DEBUG"] = common.get_cxx_flags_debug()
-        cmake.definitions["SIGHT_CMAKE_CXX_FLAGS_RELWITHDEBINFO"] = common.get_cxx_flags_relwithdebinfo()
-
-        cmake.configure(build_folder=self.build_subfolder)
+        cmake.configure()
         cmake.build()
         cmake.install()
 
