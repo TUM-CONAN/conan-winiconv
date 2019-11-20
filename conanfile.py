@@ -9,7 +9,7 @@ from conans import ConanFile, tools, CMake
 class WiniconvConan(ConanFile):
     name = "winiconv"
     upstream_version = "0.0.8"
-    package_revision = "-r3"
+    package_revision = "-r4"
     version = "{0}{1}".format(upstream_version, package_revision)
 
     generators = "cmake"
@@ -26,7 +26,7 @@ class WiniconvConan(ConanFile):
         del self.settings.compiler.libcxx
 
     def requirements(self):
-        self.requires("common/1.0.1@sight/stable")
+        self.requires("common/1.0.2@sight/stable")
 
     def source(self):
         tools.get("https://github.com/win-iconv/win-iconv/archive/v{0}.tar.gz".format(self.upstream_version))
